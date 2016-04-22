@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -28,6 +29,7 @@ public class simpleGui extends javax.swing.JFrame {
     
     public ArrayList<URL> links;
     public ArrayList<URL> mediaLinks;
+    private JList rowList;
     /**
      * Creates new form simpleGui
      */
@@ -35,15 +37,19 @@ public class simpleGui extends javax.swing.JFrame {
         initComponents();
         links = new ArrayList<>();
         mediaLinks = new ArrayList<>();
-        DefaultListModel model = new DefaultListModel();
-        addressList.setModel(model);
         JMenuBar bar = createMenuBar();
         workingPanel.add(bar,BorderLayout.BEFORE_FIRST_LINE);
         workingPanel.revalidate();
         workingPanel.repaint();
         
-//        addressList.setVisibleRowCount(2);
-        jScrollPane1.setViewportView(addressList);
+        String[] stringArray = {};
+        rowList = new JList(stringArray);
+        rowList.setVisibleRowCount(8);
+        DefaultListModel model = new DefaultListModel();
+        rowList.setModel(model);
+        jScrollPane1.setViewportView(rowList);
+        workingPanel.add(jScrollPane1, BorderLayout.SOUTH);
+        workingPanel.getRootPane().setDefaultButton(addMedia);
     }
 
     /**
@@ -58,9 +64,8 @@ public class simpleGui extends javax.swing.JFrame {
         workingPanel = new javax.swing.JPanel();
         mediaAddress = new javax.swing.JTextField();
         addMedia = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        addressList = new javax.swing.JList();
         clearList = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -75,20 +80,6 @@ public class simpleGui extends javax.swing.JFrame {
         });
         workingPanel.add(addMedia, java.awt.BorderLayout.LINE_END);
 
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        jScrollPane1.setAutoscrolls(true);
-
-        addressList.setToolTipText("");
-        addressList.setMaximumSize(new java.awt.Dimension(50, 85));
-        addressList.setMinimumSize(new java.awt.Dimension(50, 85));
-        addressList.setPreferredSize(new java.awt.Dimension(50, 85));
-        addressList.setSize(new java.awt.Dimension(60, 56));
-        addressList.setVisibleRowCount(10);
-        jScrollPane1.setViewportView(addressList);
-
-        workingPanel.add(jScrollPane1, java.awt.BorderLayout.PAGE_END);
-
         clearList.setText("Clear list");
         clearList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -96,6 +87,7 @@ public class simpleGui extends javax.swing.JFrame {
             }
         });
         workingPanel.add(clearList, java.awt.BorderLayout.LINE_START);
+        workingPanel.add(jScrollPane1, java.awt.BorderLayout.PAGE_END);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -105,7 +97,7 @@ public class simpleGui extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(workingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+            .addComponent(workingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
         );
 
         pack();
@@ -117,10 +109,10 @@ public class simpleGui extends javax.swing.JFrame {
             try {
                 URL singleUrl = new URL(urlStr);
                 links.add(singleUrl);
-                DefaultListModel model = (DefaultListModel) addressList.getModel();
+                DefaultListModel model = (DefaultListModel) rowList.getModel();
                 model.addElement(singleUrl);
-                addressList.repaint();
                 mediaAddress.setText("");
+                rowList.repaint();
             } catch (MalformedURLException ex) {
                 Logger.getLogger(simpleGui.class.getName()).log(Level.SEVERE, null, ex);
                 mediaAddress.setText("WRONG URL");
@@ -144,12 +136,12 @@ public class simpleGui extends javax.swing.JFrame {
     }//GEN-LAST:event_addMediaActionPerformed
 
     private void clearListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearListActionPerformed
-        DefaultListModel model = (DefaultListModel) addressList.getModel();
+        DefaultListModel model = (DefaultListModel) rowList.getModel();
         model.removeAllElements();
         links.removeAll(links);
         mediaLinks.removeAll(mediaLinks);
         mediaAddress.setText("");
-        addressList.repaint();
+        rowList.repaint();
     }//GEN-LAST:event_clearListActionPerformed
 
     /**
@@ -212,7 +204,6 @@ public class simpleGui extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMedia;
-    private javax.swing.JList addressList;
     private javax.swing.JButton clearList;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField mediaAddress;
